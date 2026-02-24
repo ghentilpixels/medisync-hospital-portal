@@ -1,0 +1,8 @@
+{
+  "name": "MediSync Hospital Portal",
+  "description": "A comprehensive hospital management and appointment booking system with role-based dashboards for patients, doctors, staff, and admins.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
