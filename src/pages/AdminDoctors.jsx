@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, Button, Badge } from "../components/UI";
 import { useAuth } from "../context/AuthContext";
 import { Users, UserPlus } from "lucide-react";
-import { doctors } from "../data/doctors";
+import { getDoctors } from "../data/doctors";
 
 export const AdminDoctors = () => {
   const { user } = useAuth();
+  const [doctorList, setDoctorList] = useState([]);
+
+  useEffect(() => {
+    setDoctorList(getDoctors());
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -28,7 +33,7 @@ export const AdminDoctors = () => {
       </header>
 
       <div className="grid grid-cols-1 gap-6">
-        {doctors.map((doctor) => (
+        {doctorList.map((doctor) => (
           <Card key={doctor.id} className="p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>

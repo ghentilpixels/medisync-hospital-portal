@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, Button, Input } from "../components/UI";
 import { ArrowLeft, UserPlus, Mail, Phone, Stethoscope } from "lucide-react";
+import { addDoctor } from "../data/doctors";
 
 export const AdminAddDoctor = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export const AdminAddDoctor = () => {
     email: "",
     phone: "",
     status: "Active",
+    unit: "General Medicine",
   });
 
   const handleChange = (event) => {
@@ -20,7 +22,8 @@ export const AdminAddDoctor = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate("/admin/doctors");
+    const savedDoctor = addDoctor(doctor);
+    navigate(`/admin/doctors/${savedDoctor.id}`);
   };
 
   return (
@@ -85,14 +88,13 @@ export const AdminAddDoctor = () => {
               value={doctor.status}
               onChange={handleChange}
             />
-            <div className="flex flex-col justify-end">
-              <p className="text-sm font-medium text-slate-700">
-                Assigned Unit
-              </p>
-              <div className="mt-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600">
-                General Medicine
-              </div>
-            </div>
+            <Input
+              label="Assigned Unit"
+              name="unit"
+              placeholder="General Medicine"
+              value={doctor.unit}
+              onChange={handleChange}
+            />
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

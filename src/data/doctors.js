@@ -1,4 +1,6 @@
-export const doctors = [
+const STORAGE_KEY = "medisync-doctors";
+
+const initialDoctors = [
   {
     id: "1",
     name: "Dr. Emily Smith",
@@ -37,4 +39,59 @@ export const doctors = [
   },
 ];
 
-export const getDoctorById = (id) => doctors.find((doctor) => doctor.id === id);
+const loadDoctors = () => {
+  if (typeof window === "undefined") return initialDoctors;
+  const stored = window.localStorage.getItem(STORAGE_KEY);
+  if (!stored) return initialDoctors;
+
+  try {
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed : initialDoctors;
+  } catch {
+    return initialDoctors;
+  }
+};
+
+const saveDoctors = (doctors) => {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(doctors));
+};
+
+export const getDoctors = () => loadDoctors();
+
+export const getDoctorById = (id) =>
+  getDoctors().find((doctor) => doctor.id === id);
+
+export const addDoctor = (doctor) => {
+  const existingDoctors = loadDoctors();
+  const nextId = String(
+    Math.max(0, ...existingDoctors.map((item) => Number(item.id))) + 1,
+  );
+  const newDoctor = {
+    id: nextId,
+    patients: 0,
+    experience: "1 year",
+    availability: "Mon - Fri, 9am - 5pm",
+    unit: doctor.unit || "General Medicine",
+    ...doctor,
+  };
+  const updatedDoctors = [...existingDoctors, newDoctor];
+  saveDoctors(updatedDoctors);
+  return newDoctor;
+};
+
+export const updateDoctor = (id, updates) => {
+  const existingDoctors = loadDoctors();
+  const updatedDoctors = existingDoctors.map((doctor) =>
+    doctor.id === id ? { ...doctor, ...updates } : doctor,
+  );
+  saveDoctors(updatedDoctors);
+  return updatedDoctors.find((doctor) => doctor.id === id);
+};
+
+export const deleteDoctor = (id) => {
+  const existingDoctors = loadDoctors();
+  const updatedDoctors = existingDoctors.filter((doctor) => doctor.id !== id);
+  saveDoctors(updatedDoctors);
+  return updatedDoctors;
+};

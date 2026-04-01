@@ -1,41 +1,98 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, Badge, Button } from "../components/UI";
 import { Calendar, Clock, MapPin, Video, MoreVertical } from "lucide-react";
 import { AppointmentStatus } from "../types";
 
+const initialAppointments = [
+  {
+    id: "1",
+    doctorName: "Dr. Emily Smith",
+    specialty: "Cardiologist",
+    date: "2024-03-25",
+    time: "10:00 AM",
+    status: AppointmentStatus.CONFIRMED,
+    type: "IN_PERSON",
+    location: "Main Hospital, Wing A",
+  },
+  {
+    id: "2",
+    doctorName: "Dr. Michael Chen",
+    specialty: "Dermatologist",
+    date: "2024-03-28",
+    time: "02:30 PM",
+    status: AppointmentStatus.PENDING,
+    type: "VIDEO",
+    location: "Online",
+  },
+  {
+    id: "3",
+    doctorName: "Dr. Sarah Johnson",
+    specialty: "Pediatrician",
+    date: "2024-02-15",
+    time: "11:00 AM",
+    status: AppointmentStatus.COMPLETED,
+    type: "IN_PERSON",
+    location: "Children Wing, Wing C",
+  },
+];
+
 export const PatientAppointments = () => {
-  const appointments = [
-    {
-      id: "1",
-      doctorName: "Dr. Emily Smith",
-      specialty: "Cardiologist",
-      date: "2024-03-25",
-      time: "10:00 AM",
-      status: AppointmentStatus.CONFIRMED,
-      type: "IN_PERSON",
-      location: "Main Hospital, Wing A",
-    },
-    {
-      id: "2",
-      doctorName: "Dr. Michael Chen",
-      specialty: "Dermatologist",
-      date: "2024-03-28",
-      time: "02:30 PM",
-      status: AppointmentStatus.PENDING,
-      type: "VIDEO",
-      location: "Online",
-    },
-    {
-      id: "3",
-      doctorName: "Dr. Sarah Johnson",
-      specialty: "Pediatrician",
-      date: "2024-02-15",
-      time: "11:00 AM",
-      status: AppointmentStatus.COMPLETED,
-      type: "IN_PERSON",
-      location: "Children Wing, Wing C",
-    },
-  ];
+  const [appointments, setAppointments] = useState(initialAppointments);
+
+  const handleCancel = (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to cancel this appointment?",
+    );
+    if (!confirmed) return;
+
+    setAppointments((prev) =>
+      prev.map((apt) =>
+        apt.id === id ? { ...apt, status: AppointmentStatus.CANCELLED } : apt,
+      ),
+    );
+  };
+
+  const handleReschedule = (id) => {
+    const newDate = window.prompt(
+      "Enter a new appointment date (format: YYYY-MM-DD):",
+      "2024-04-01",
+    );
+    if (!newDate) return;
+
+    const newTime = window.prompt(
+      "Enter a new appointment time (example: 10:30 AM):",
+      "10:30 AM",
+    );
+    if (!newTime) return;
+
+    setAppointments((prev) =>
+      prev.map((apt) =>
+        apt.id === id
+          ? {
+              ...apt,
+              date: newDate,
+              time: newTime,
+              status: AppointmentStatus.PENDING,
+            }
+          : apt,
+      ),
+    );
+  };
+
+  const getBadgeVariant = (status) => {
+    switch (status) {
+      case AppointmentStatus.CONFIRMED:
+        return "success";
+      case AppointmentStatus.PENDING:
+        return "warning";
+      case AppointmentStatus.COMPLETED:
+        return "info";
+      case AppointmentStatus.CANCELLED:
+        return "error";
+      default:
+        return "neutral";
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -80,17 +137,7 @@ export const PatientAppointments = () => {
 
               <div className="flex items-center justify-between md:justify-end gap-4 border-t md:border-t-0 pt-4 md:pt-0">
                 <div className="flex flex-col items-end">
-                  <Badge
-                    variant={
-                      apt.status === AppointmentStatus.CONFIRMED
-                        ? "success"
-                        : apt.status === AppointmentStatus.PENDING
-                          ? "warning"
-                          : apt.status === AppointmentStatus.COMPLETED
-                            ? "info"
-                            : "error"
-                    }
-                  >
+                  <Badge variant={getBadgeVariant(apt.status)}>
                     {apt.status}
                   </Badge>
                 </div>
@@ -98,13 +145,18 @@ export const PatientAppointments = () => {
                   {apt.status === AppointmentStatus.PENDING ||
                   apt.status === AppointmentStatus.CONFIRMED ? (
                     <>
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleReschedule(apt.id)}
+                      >
                         Reschedule
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
                         className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        onClick={() => handleCancel(apt.id)}
                       >
                         Cancel
                       </Button>

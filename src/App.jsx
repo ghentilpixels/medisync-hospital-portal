@@ -13,6 +13,8 @@ import { PatientDashboard } from "./pages/PatientDashboard";
 import { PatientAppointments } from "./pages/PatientAppointments";
 import { PatientRecords } from "./pages/PatientRecords";
 import { DoctorDashboard } from "./pages/DoctorDashboard";
+import { DoctorSchedule } from "./pages/DoctorSchedule";
+import { DoctorPatients } from "./pages/DoctorPatients";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { AdminDoctors } from "./pages/AdminDoctors";
 import { AdminAddDoctor } from "./pages/AdminAddDoctor";
@@ -98,6 +100,22 @@ export default function App() {
               element={
                 <ProtectedRoute allowedRoles={[UserRole.DOCTOR]}>
                   <DoctorDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor/schedule"
+              element={
+                <ProtectedRoute allowedRoles={[UserRole.DOCTOR]}>
+                  <DoctorSchedule />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor/patients"
+              element={
+                <ProtectedRoute allowedRoles={[UserRole.DOCTOR]}>
+                  <DoctorPatients />
                 </ProtectedRoute>
               }
             />

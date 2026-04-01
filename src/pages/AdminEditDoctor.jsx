@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Card, Button, Input } from "../components/UI";
 import { ArrowLeft } from "lucide-react";
-import { getDoctorById } from "../data/doctors";
+import { getDoctorById, updateDoctor } from "../data/doctors";
 
 export const AdminEditDoctor = () => {
   const { doctorId } = useParams();
@@ -41,6 +41,7 @@ export const AdminEditDoctor = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    updateDoctor(doctorId, formData);
     navigate(`/admin/doctors/${doctorId}`);
   };
 

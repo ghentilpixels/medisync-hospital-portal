@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, Button, Badge } from "../components/UI";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -12,8 +13,69 @@ import {
 } from "lucide-react";
 import { AppointmentStatus } from "../types";
 
+const initialAppointments = [
+  {
+    id: "1",
+    patientName: "Alice Freeman",
+    time: "09:00 AM",
+    type: "IN_PERSON",
+    status: AppointmentStatus.CONFIRMED,
+    reason: "Regular checkup",
+  },
+  {
+    id: "2",
+    patientName: "Bob Vance",
+    time: "10:30 AM",
+    type: "VIDEO",
+    status: AppointmentStatus.CONFIRMED,
+    reason: "Follow up on medication",
+  },
+  {
+    id: "3",
+    patientName: "Charlie Day",
+    time: "11:45 AM",
+    type: "IN_PERSON",
+    status: AppointmentStatus.PENDING,
+    reason: "Chest pain",
+  },
+];
+
 export const DoctorDashboard = () => {
   const { user } = useAuth();
+  const [todayAppointments, setTodayAppointments] =
+    useState(initialAppointments);
+
+  const handleConfirm = (id) => {
+    setTodayAppointments((prev) =>
+      prev.map((apt) =>
+        apt.id === id ? { ...apt, status: AppointmentStatus.CONFIRMED } : apt,
+      ),
+    );
+  };
+
+  const handleCancel = (id) => {
+    const confirmed = window.confirm("Cancel this appointment?");
+    if (!confirmed) return;
+
+    setTodayAppointments((prev) =>
+      prev.map((apt) =>
+        apt.id === id ? { ...apt, status: AppointmentStatus.CANCELLED } : apt,
+      ),
+    );
+  };
+
+  const handleViewDetails = (apt) => {
+    window.alert(
+      `Patient: ${apt.patientName}\nTime: ${apt.time}\nType: ${apt.type.replace("_", " ")}\nStatus: ${apt.status}\nReason: ${apt.reason}`,
+    );
+  };
+
+  const getStatusBadge = (status) => {
+    if (status === AppointmentStatus.CONFIRMED) return "success";
+    if (status === AppointmentStatus.PENDING) return "warning";
+    if (status === AppointmentStatus.COMPLETED) return "info";
+    return "error";
+  };
 
   const stats = [
     {
@@ -33,33 +95,6 @@ export const DoctorDashboard = () => {
       value: "5",
       icon: Clock,
       color: "bg-amber-50 text-amber-600",
-    },
-  ];
-
-  const todayAppointments = [
-    {
-      id: "1",
-      patientName: "Alice Freeman",
-      time: "09:00 AM",
-      type: "IN_PERSON",
-      status: AppointmentStatus.CONFIRMED,
-      reason: "Regular checkup",
-    },
-    {
-      id: "2",
-      patientName: "Bob Vance",
-      time: "10:30 AM",
-      type: "VIDEO",
-      status: AppointmentStatus.CONFIRMED,
-      reason: "Follow up on medication",
-    },
-    {
-      id: "3",
-      patientName: "Charlie Day",
-      time: "11:45 AM",
-      type: "IN_PERSON",
-      status: AppointmentStatus.PENDING,
-      reason: "Chest pain",
     },
   ];
 
@@ -98,9 +133,11 @@ export const DoctorDashboard = () => {
             <h2 className="text-lg font-bold text-slate-900">
               Today's Schedule
             </h2>
-            <Button variant="outline" size="sm">
-              View Full Calendar
-            </Button>
+            <Link to="/doctor/schedule">
+              <Button variant="outline" size="sm">
+                View Full Calendar
+              </Button>
+            </Link>
           </div>
 
           <Card>
@@ -157,33 +194,35 @@ export const DoctorDashboard = () => {
                         </Badge>
                       </td>
                       <td className="px-6 py-4">
-                        <Badge
-                          variant={
-                            apt.status === AppointmentStatus.CONFIRMED
-                              ? "success"
-                              : "warning"
-                          }
-                        >
+                        <Badge variant={getStatusBadge(apt.status)}>
                           {apt.status}
                         </Badge>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg"
-                            title="Confirm"
-                          >
-                            <CheckCircle size={18} />
-                          </button>
-                          <button
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                            title="Cancel"
-                          >
-                            <XCircle size={18} />
-                          </button>
+                          {apt.status === AppointmentStatus.PENDING && (
+                            <button
+                              className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg"
+                              title="Confirm"
+                              onClick={() => handleConfirm(apt.id)}
+                            >
+                              <CheckCircle size={18} />
+                            </button>
+                          )}
+                          {(apt.status === AppointmentStatus.PENDING ||
+                            apt.status === AppointmentStatus.CONFIRMED) && (
+                            <button
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                              title="Cancel"
+                              onClick={() => handleCancel(apt.id)}
+                            >
+                              <XCircle size={18} />
+                            </button>
+                          )}
                           <button
                             className="p-2 text-slate-400 hover:bg-slate-100 rounded-lg"
                             title="View Details"
+                            onClick={() => handleViewDetails(apt)}
                           >
                             <ChevronRight size={18} />
                           </button>

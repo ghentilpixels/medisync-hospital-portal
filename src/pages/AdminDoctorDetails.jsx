@@ -1,12 +1,24 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Card, Badge, Button } from "../components/UI";
 import { ArrowLeft, Clock, Users, Stethoscope } from "lucide-react";
-import { getDoctorById } from "../data/doctors";
+import { deleteDoctor, getDoctorById } from "../data/doctors";
 
 export const AdminDoctorDetails = () => {
+  const navigate = useNavigate();
   const { doctorId } = useParams();
   const doctor = getDoctorById(doctorId);
+
+  const handleDelete = () => {
+    if (
+      window.confirm(
+        `Delete ${doctor.name} from doctor management? This cannot be undone.`,
+      )
+    ) {
+      deleteDoctor(doctorId);
+      navigate("/admin/doctors");
+    }
+  };
 
   if (!doctor) {
     return (
@@ -44,6 +56,9 @@ export const AdminDoctorDetails = () => {
           <Link to={`/admin/doctors/${doctor.id}/edit`}>
             <Button variant="outline">Edit Profile</Button>
           </Link>
+          <Button variant="danger" onClick={handleDelete}>
+            Delete Doctor
+          </Button>
         </div>
       </div>
 
@@ -62,7 +77,9 @@ export const AdminDoctorDetails = () => {
               <p className="text-slate-600">{doctor.phone}</p>
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">Assigned Unit</h2>
+              <h2 className="text-lg font-semibold text-slate-900">
+                Assigned Unit
+              </h2>
               <p className="text-slate-600 mt-2">{doctor.unit}</p>
             </div>
             <div className="flex items-center gap-3 text-sm text-slate-600">
