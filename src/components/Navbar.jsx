@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { UserRole } from "../types";
 import { LogOut, User as UserIcon, Bell, Menu, X } from "lucide-react";
@@ -53,13 +53,20 @@ export const Navbar = () => {
             </Link>
             <div className="hidden md:ml-8 md:flex md:space-x-4">
               {currentLinks.map((link) => (
-                <Link
+                <NavLink
                   key={link.name}
                   to={link.href}
-                  className="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className={({ isActive }) =>
+                    cn(
+                      "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-emerald-50 text-emerald-700"
+                        : "text-slate-600 hover:text-emerald-600",
+                    )
+                  }
                 >
                   {link.name}
-                </Link>
+                </NavLink>
               ))}
             </div>
           </div>

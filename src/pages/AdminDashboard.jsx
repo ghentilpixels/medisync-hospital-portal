@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Card, Button, Badge } from "../components/UI";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -53,12 +54,16 @@ export const AdminDashboard = () => {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline">
-            <Settings size={18} className="mr-2" /> Settings
-          </Button>
-          <Button>
-            <UserPlus size={18} className="mr-2" /> Add Staff
-          </Button>
+          <Link to="/admin/settings">
+            <Button variant="outline">
+              <Settings size={18} className="mr-2" /> Settings
+            </Button>
+          </Link>
+          <Link to="/admin/doctors">
+            <Button>
+              <UserPlus size={18} className="mr-2" /> Add Staff
+            </Button>
+          </Link>
         </div>
       </header>
 
@@ -89,9 +94,11 @@ export const AdminDashboard = () => {
             <h2 className="text-lg font-bold text-slate-900">
               Recent Staff Activity
             </h2>
-            <Button variant="ghost" size="sm">
-              View All
-            </Button>
+            <Link to="/admin/doctors">
+              <Button variant="ghost" size="sm">
+                View All
+              </Button>
+            </Link>
           </div>
           <div className="space-y-6">
             {[1, 2, 3, 4].map((i) => (
@@ -120,9 +127,11 @@ export const AdminDashboard = () => {
             <h2 className="text-lg font-bold text-slate-900">
               Hospital Capacity
             </h2>
-            <Button variant="ghost" size="sm">
-              Details
-            </Button>
+            <Link to="/admin/stats">
+              <Button variant="ghost" size="sm">
+                Details
+              </Button>
+            </Link>
           </div>
           <div className="space-y-6">
             <div>

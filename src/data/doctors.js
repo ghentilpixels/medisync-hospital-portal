@@ -1,0 +1,40 @@
+export const doctors = [
+  {
+    id: "1",
+    name: "Dr. Emily Smith",
+    specialty: "Cardiology",
+    status: "Active",
+    email: "emily.smith@medisync.com",
+    phone: "+1 (555) 234-5678",
+    patients: 312,
+    experience: "12 years",
+    availability: "Mon - Fri, 9am - 5pm",
+    unit: "Cardiac Care",
+  },
+  {
+    id: "2",
+    name: "Dr. Michael Chen",
+    specialty: "Dermatology",
+    status: "On Leave",
+    email: "michael.chen@medisync.com",
+    phone: "+1 (555) 987-6543",
+    patients: 189,
+    experience: "8 years",
+    availability: "Tue - Thu, 10am - 4pm",
+    unit: "Skin & Allergy",
+  },
+  {
+    id: "3",
+    name: "Dr. Sarah Johnson",
+    specialty: "Pediatrics",
+    status: "Active",
+    email: "sarah.johnson@medisync.com",
+    phone: "+1 (555) 456-7890",
+    patients: 240,
+    experience: "15 years",
+    availability: "Mon - Sat, 8am - 2pm",
+    unit: "Pediatric Care",
+  },
+];
+
+export const getDoctorById = (id) => doctors.find((doctor) => doctor.id === id);
