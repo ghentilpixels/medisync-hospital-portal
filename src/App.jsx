@@ -24,6 +24,7 @@ import { AdminStats } from "./pages/AdminStats";
 import { AdminSettings } from "./pages/AdminSettings";
 import { DoctorSearch } from "./pages/DoctorSearch";
 import { BookingPage } from "./pages/BookingPage";
+import { HomePage } from "./pages/HomePage";
 import { UnauthorizedPage } from "./pages/UnauthorizedPage";
 import { VideoConsultPage } from "./pages/VideoConsultPage";
 import { UserRole } from "./types";
@@ -36,11 +37,12 @@ export default function App() {
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/hero" element={<HomePage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
           {/* Protected Routes */}
           <Route element={<Layout />}>
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<HomePage />} />
 
             {/* Patient Routes */}
             <Route

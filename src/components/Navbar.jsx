@@ -41,12 +41,14 @@ export const Navbar = () => {
 
   const currentLinks = user ? navLinks[user.role] : [];
 
+  const brandHref = user ? "/" : "/";
+
   return (
     <nav className="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center">
+            <Link to={brandHref} className="flex-shrink-0 flex items-center">
               <span className="text-2xl font-bold text-emerald-600 tracking-tight">
                 MediSync
               </span>
@@ -72,26 +74,45 @@ export const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <button className="p-2 text-slate-400 hover:text-emerald-600 transition-colors">
-              <Bell size={20} />
-            </button>
-            <div className="flex items-center space-x-3 border-l border-slate-200 pl-4">
-              <div className="text-right">
-                <p className="text-sm font-medium text-slate-900">
-                  {user?.name}
-                </p>
-                <p className="text-xs text-slate-500 capitalize">
-                  {user?.role.toLowerCase()}
-                </p>
+            {user ? (
+              <>
+                <button className="p-2 text-slate-400 hover:text-emerald-600 transition-colors">
+                  <Bell size={20} />
+                </button>
+                <div className="flex items-center space-x-3 border-l border-slate-200 pl-4">
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-slate-900">
+                      {user?.name}
+                    </p>
+                    <p className="text-xs text-slate-500 capitalize">
+                      {user?.role.toLowerCase()}
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="p-2 text-slate-400 hover:text-red-600 transition-colors"
+                    title="Logout"
+                  >
+                    <LogOut size={20} />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex items-center gap-3">
+                <Link
+                  to="/login"
+                  className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+                >
+                  Sign Up
+                </Link>
               </div>
-              <button
-                onClick={handleLogout}
-                className="p-2 text-slate-400 hover:text-red-600 transition-colors"
-                title="Logout"
-              >
-                <LogOut size={20} />
-              </button>
-            </div>
+            )}
           </div>
 
           <div className="flex md:hidden items-center">
@@ -119,12 +140,31 @@ export const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <button
-              onClick={handleLogout}
-              className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
-            >
-              Logout
-            </button>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block px-3 py-2 rounded-md text-base font-medium text-white bg-emerald-600 hover:bg-emerald-700"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
